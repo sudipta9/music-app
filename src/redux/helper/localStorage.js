@@ -1,5 +1,18 @@
 import localforage from "localforage";
 
+export const getRecommendations = async () => {
+    var recommendations = await localforage
+        .getItem("recommendations")
+        .then((value) => {
+            return value;
+        });
+    return recommendations;
+};
+
+export const setRecommendations = (recommendations) => {
+    localforage.setItem("recommendations", recommendations);
+};
+
 // playlists = {
 //     playlists: [
 //         {
@@ -15,56 +28,41 @@ import localforage from "localforage";
 //     ]
 // }
 
-export const getRecommendations = async () => {
-    var recommendations = await localforage
-        .getItem("recommendations")
-        .then((value) => {
-            return value;
-        });
-    return recommendations;
-};
-
-export const setRecommendations = (recommendations) => {
-    localforage.setItem("recommendations", recommendations);
-};
-
-export const getPlaylist = () => {
-    const playlist = localforage.getItem("playlists").then((value) => {
-        return value;
-    });
+export const getPlaylist = async () => {
+    const playlist = await localforage.getItem("playlists");
     return playlist;
 };
 
-export const createPlaylist = (playlistName) => {
-    const playlist = getPlaylist();
-    playlist.then((value) => {
-        if (value) {
-            value.playlists.push({
-                name: playlistName,
-                songs: [],
-            });
-            localforage.setItem("playlists", value);
-        } else {
-            localforage.setItem("playlists", {
-                playlists: [
-                    {
-                        name: playlistName,
-                        songs: [],
-                    },
-                ],
-            });
-        }
-    });
+export const createPlaylist = async (playlist) => {
+    const playlists = await getPlaylist();
+    if (!playlists) {
+        const newPlaylist = {
+            playlists: [
+                {
+                    name: playlist,
+                    songs: [],
+                },
+            ],
+        };
+        localforage.setItem("playlists", newPlaylist);
+        return newPlaylist;
+    }
+    if (playlists) {
+        playlists.playlists.push({
+            name: playlist,
+            songs: [],
+        });
+        localforage.setItem("playlists", playlists);
+    }
+    return playlists;
 };
 
-export const addSongToPlaylist = (playlistName, song) => {
-    const playlist = getPlaylist();
-    playlist.then((value) => {
-        value.playlists.forEach((playlist) => {
-            if (playlist.name === playlistName) {
-                playlist.songs.push(song);
-            }
-        });
-        localforage.setItem("playlists", value);
-    });
+export const addSong = async (playlist, song) => {
+    const playlists = await getPlaylist();
+    const index = playlists.playlists.findIndex(
+        (item) => item.name === playlist
+    );
+    playlists.playlists[index].songs.push(song);
+    localforage.setItem("playlists", playlists);
+    return playlists;
 };

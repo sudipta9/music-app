@@ -1,8 +1,16 @@
 import { faHeart, faPlay, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect } from "react";
 import { Col } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import AddSongToPlaylistModal from "./addSongToPlaylistModal";
+import CreatePlaylist from "./createPlaylist";
+import {
+    addSongToPlaylist,
+    createNewPlaylist,
+} from "../redux/reducers/playlist";
+
 const StyledSongCard = styled(Col)`
     padding: 0.5rem;
     .content {
@@ -91,6 +99,17 @@ const StyledSongCard = styled(Col)`
     }
 `;
 const SongCard = ({ track }) => {
+    const [showAddToPlayListModal, setShowAddToPlayListModal] =
+        React.useState(false);
+    const [showCreatePlaylistModal, setShowCreatePlaylistModal] =
+        React.useState(false);
+    const playlistState = useSelector((state) => state.playlist);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        console.log(playlistState);
+    }, [playlistState]);
+
     return (
         <StyledSongCard>
             <div className="content rounded">
@@ -110,7 +129,7 @@ const SongCard = ({ track }) => {
                 <div
                     className="sm-btn add-to-playlist-button"
                     onClick={() => {
-                        // setShowAddToPlayListModal(true);
+                        setShowAddToPlayListModal(true);
                     }}
                 >
                     <div className="circle">
@@ -118,7 +137,34 @@ const SongCard = ({ track }) => {
                     </div>
                 </div>
                 {/* Add to playlist modal */}
+                <AddSongToPlaylistModal
+                    show={showAddToPlayListModal}
+                    onHide={() => {
+                        setShowAddToPlayListModal(false);
+                    }}
+                    showCreatePlaylist={() => {
+                        setShowCreatePlaylistModal(true);
+                    }}
+                    playlist={playlistState.playlist}
+                    onAddSongToPlaylist={(playlist) => {
+                        dispatch(
+                            addSongToPlaylist({
+                                playlist: playlist,
+                                track: track,
+                            })
+                        );
+                    }}
+                />
                 {/* ? create playlist modal */}
+                <CreatePlaylist
+                    show={showCreatePlaylistModal}
+                    onHide={() => {
+                        setShowCreatePlaylistModal(false);
+                    }}
+                    onAddNewPlayList={(name) => {
+                        dispatch(createNewPlaylist(name));
+                    }}
+                />
                 <div className="sm-btn add-to-fav-button">
                     <div className="circle">
                         <FontAwesomeIcon icon={faHeart} />

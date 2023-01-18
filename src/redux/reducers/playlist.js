@@ -1,22 +1,82 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { getPlaylist } from "../helper/localStorage";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { addSong, createPlaylist, getPlaylist } from "../helper/localStorage";
 
-const persistedState = getPlaylist();
+export const fetchPlaylist = createAsyncThunk(
+    "playlist/fetchPlaylist",
+    async (args, thunkAPI) => {
+        const playlist = await getPlaylist();
+        return thunkAPI.fulfillWithValue(playlist || { playlists: [] });
+    }
+);
+
+export const createNewPlaylist = createAsyncThunk(
+    "playlist/createNewPlaylist",
+    async (playlist, thunkAPI) => {
+        const playlists = await createPlaylist(playlist);
+        return thunkAPI.fulfillWithValue(playlists);
+    }
+);
+
+export const addSongToPlaylist = createAsyncThunk(
+    "playlist/addSongToPlaylist",
+    async ({ playlist, track }, thunkAPI) => {
+        const playlists = await addSong(playlist, track);
+        return thunkAPI.fulfillWithValue(playlists);
+    }
+);
 
 const initialState = {
-    playlist: persistedState ? persistedState : [],
+    playlist: [],
+    status: "idle",
+    error: null,
 };
 
 const playlistSlice = createSlice({
     name: "playlist",
     initialState,
-    reducers: {
-        addNewPlaylist: (state, action) => {
-            state.playlist.push(action.payload);
-        },
+    reducers: {},
+    extraReducers(builder) {
+        builder
+            .addCase(fetchPlaylist.pending, (state) => {
+                state.status = "loading";
+                state.error = null;
+            })
+            .addCase(fetchPlaylist.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.playlist = action.payload.playlists;
+                state.error = null;
+            })
+            .addCase(fetchPlaylist.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message;
+            })
+            .addCase(createNewPlaylist.pending, (state) => {
+                state.status = "loading";
+                state.error = null;
+            })
+            .addCase(createNewPlaylist.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.playlist = action.payload.playlists;
+                state.error = null;
+            })
+            .addCase(createNewPlaylist.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message;
+            })
+            .addCase(addSongToPlaylist.pending, (state) => {
+                state.status = "loading";
+                state.error = null;
+            })
+            .addCase(addSongToPlaylist.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.playlist = action.payload.playlists;
+                state.error = null;
+            })
+            .addCase(addSongToPlaylist.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message;
+            });
     },
 });
-
-export const { addNewPlaylist } = playlistSlice.actions;
 
 export default playlistSlice.reducer;

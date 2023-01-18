@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import PopularResults from "./components/popularResults";
 import SearchResults from "./components/searchResults";
@@ -7,8 +7,15 @@ import Favorites from "./pages/favorites";
 import Playlists from "./pages/playlists";
 import Home from "./pages/home";
 import Search from "./pages/search";
+import { fetchPlaylist } from "./redux/reducers/playlist";
+import { useDispatch } from "react-redux";
 
 const App = () => {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(fetchPlaylist());
+    }, [dispatch]);
+
     return (
         <Routes>
             <Route path="/" element={<DefaultLayout />}>

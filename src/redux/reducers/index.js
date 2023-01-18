@@ -6,7 +6,7 @@ import playListReducer from "./playlist";
 const rootReducer = combineReducers({
     recommendations: fetchRecommendationsReducer,
     searchResults: fetchSearchResultsReducer,
-    // playlist: playListReducer,
+    playlist: playListReducer,
 });
 
 export default rootReducer;
