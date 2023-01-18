@@ -8,27 +8,35 @@ import SongCard from "./songCard";
 const PopularResults = () => {
     const dispatch = useDispatch();
     const recommendationsState = useSelector((state) => {
-        return state.recommendations.tracks;
+        return state.recommendations;
     });
-    const [recommendations, setRecommendations] =
-        useState(recommendationsState);
+
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (localforage.getItem("recommendations")) {
-            localforage.getItem("recommendations").then((value) => {
-                setRecommendations(value);
-            });
-        } else {
-            dispatch(fetchRecommendations(86954223));
-            setRecommendations(recommendationsState);
-            localforage.setItem("recommendations", recommendationsState);
+        dispatch(fetchRecommendations(484129036));
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (recommendationsState.status === "loading") {
+            setLoading(true);
         }
-    }, [dispatch, recommendationsState]);
+        if (recommendationsState.status === "succeeded") {
+            setLoading(false);
+        }
+    }, [recommendationsState.status]);
     return (
         <>
             <h3>Popular Results</h3>
+            {loading && (
+                <div className="d-flex justify-content-center">
+                    <div className="spinner-border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            )}
             <Row xs={1} sm={2} md={3} lg={6}>
-                {recommendations.slice(0, 18).map((track) => {
+                {recommendationsState.tracks.slice(0, 18).map((track) => {
                     return <SongCard track={track} key={track.key} />;
                 })}
             </Row>

@@ -1,9 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { getRecommendations, setRecommendations } from "../helper/localStorage";
 
 export const fetchRecommendations = createAsyncThunk(
     "recommendations/fetchRecommendations",
     async (key, thunkAPI) => {
+        const storedRecommendations = await getRecommendations();
+        if (storedRecommendations) {
+            return thunkAPI.fulfillWithValue(storedRecommendations);
+        }
         const response = await axios.get(
             `https://${process.env.REACT_APP_RAPIDAPI_HOST}/songs/list-recommendations`,
             {
@@ -17,6 +22,7 @@ export const fetchRecommendations = createAsyncThunk(
                 },
             }
         );
+        setRecommendations(response.data);
         return response.data;
     }
 );

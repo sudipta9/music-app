@@ -15,8 +15,8 @@ import localforage from "localforage";
 //     ]
 // }
 
-export const getRecommendations = () => {
-    const recommendations = localforage
+export const getRecommendations = async () => {
+    var recommendations = await localforage
         .getItem("recommendations")
         .then((value) => {
             return value;
