@@ -1,6 +1,6 @@
 import { faHeart, faPlay, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect } from "react";
+import React from "react";
 import { Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -105,11 +105,6 @@ const SongCard = ({ track }) => {
         React.useState(false);
     const playlistState = useSelector((state) => state.playlist);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        console.log(playlistState);
-    }, [playlistState]);
-
     return (
         <StyledSongCard>
             <div className="content rounded">

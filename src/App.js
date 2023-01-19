@@ -9,6 +9,7 @@ import Home from "./pages/home";
 import Search from "./pages/search";
 import { fetchPlaylist } from "./redux/reducers/playlist";
 import { useDispatch } from "react-redux";
+import SongsInPlaylist from "./components/songsInPlaylist";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -25,7 +26,14 @@ const App = () => {
                     <Route path=":songName" element={<SearchResults />} />
                 </Route>
                 <Route path="favorites" element={<Favorites />} />
-                <Route path="playlists" element={<Playlists />} />
+                <Route path="playlists" element={<Playlists />}>
+                    <Route
+                        path=":playlistId"
+                        element={
+                            <SongsInPlaylist>Some playlist</SongsInPlaylist>
+                        }
+                    />
+                </Route>
                 <Route path="*" element={<div>404</div>} />
             </Route>
         </Routes>

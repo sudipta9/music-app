@@ -31,6 +31,7 @@ const CreatePlaylist = ({ show, onHide, onAddNewPlayList }) => {
                     onClick={(e) => {
                         e.preventDefault();
                         onAddNewPlayList(playlistName);
+                        setPlaylistName("");
                         onHide();
                     }}
                 >

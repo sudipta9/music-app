@@ -19,7 +19,7 @@ const Home = () => {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        dispatch(fetchRecommendations(484129036));
+        dispatch(fetchRecommendations(292325264));
     }, [dispatch]);
 
     useEffect(() => {

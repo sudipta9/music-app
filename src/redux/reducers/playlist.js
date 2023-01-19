@@ -79,4 +79,5 @@ const playlistSlice = createSlice({
     },
 });
 
+export const { getSongsFromPlaylist } = playlistSlice.actions;
 export default playlistSlice.reducer;

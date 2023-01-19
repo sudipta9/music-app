@@ -39,6 +39,7 @@ export const createPlaylist = async (playlist) => {
         const newPlaylist = {
             playlists: [
                 {
+                    id: playlist.replace(/\s+/g, "-").toLowerCase(),
                     name: playlist,
                     songs: [],
                 },
@@ -48,10 +49,17 @@ export const createPlaylist = async (playlist) => {
         return newPlaylist;
     }
     if (playlists) {
-        playlists.playlists.push({
-            name: playlist,
-            songs: [],
-        });
+        // check playlist already exists
+        const index = playlists.playlists.findIndex(
+            (item) => item.name === playlist
+        );
+        if (index === -1) {
+            playlists.playlists.push({
+                id: playlist.replace(/\s+/g, "-").toLowerCase(),
+                name: playlist,
+                songs: [],
+            });
+        }
         localforage.setItem("playlists", playlists);
     }
     return playlists;
