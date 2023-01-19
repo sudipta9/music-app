@@ -1,5 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addSong, createPlaylist, getPlaylist } from "../helper/localStorage";
+import {
+    addSong,
+    addToFavorites,
+    createPlaylist,
+    getPlaylist,
+} from "../helper/localStorage";
 
 export const fetchPlaylist = createAsyncThunk(
     "playlist/fetchPlaylist",
@@ -21,6 +26,14 @@ export const addSongToPlaylist = createAsyncThunk(
     "playlist/addSongToPlaylist",
     async ({ playlist, track }, thunkAPI) => {
         const playlists = await addSong(playlist, track);
+        return thunkAPI.fulfillWithValue(playlists);
+    }
+);
+
+export const addSongToFavorite = createAsyncThunk(
+    "playlist/addSongToFavorite",
+    async (track, thunkAPI) => {
+        const playlists = await addToFavorites(track);
         return thunkAPI.fulfillWithValue(playlists);
     }
 );
@@ -73,6 +86,19 @@ const playlistSlice = createSlice({
                 state.error = null;
             })
             .addCase(addSongToPlaylist.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.error.message;
+            })
+            .addCase(addSongToFavorite.pending, (state) => {
+                state.status = "loading";
+                state.error = null;
+            })
+            .addCase(addSongToFavorite.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.playlist = action.payload.playlists;
+                state.error = null;
+            })
+            .addCase(addSongToFavorite.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.error.message;
             });

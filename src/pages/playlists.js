@@ -5,6 +5,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const StyledPlaylists = styled(Container)`
+    max-height: 100vh;
+    overflow-y: scroll;
     .card {
         cursor: pointer;
 
@@ -20,7 +22,7 @@ const Playlists = () => {
     const navigate = useNavigate();
 
     return (
-        <StyledPlaylists>
+        <StyledPlaylists className="p-3">
             <h5>All Playlists</h5>
             <Row className="mt-4">
                 {playlist.playlist.map((item) => (

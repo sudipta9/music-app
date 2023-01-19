@@ -7,7 +7,7 @@ import Favorites from "./pages/favorites";
 import Playlists from "./pages/playlists";
 import Home from "./pages/home";
 import Search from "./pages/search";
-import { fetchPlaylist } from "./redux/reducers/playlist";
+import { createNewPlaylist, fetchPlaylist } from "./redux/reducers/playlist";
 import { useDispatch } from "react-redux";
 import SongsInPlaylist from "./components/songsInPlaylist";
 
@@ -15,6 +15,7 @@ const App = () => {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(fetchPlaylist());
+        dispatch(createNewPlaylist("favorites"));
     }, [dispatch]);
 
     return (

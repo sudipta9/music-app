@@ -7,6 +7,7 @@ import styled from "styled-components";
 import AddSongToPlaylistModal from "./addSongToPlaylistModal";
 import CreatePlaylist from "./createPlaylist";
 import {
+    addSongToFavorite,
     addSongToPlaylist,
     createNewPlaylist,
 } from "../redux/reducers/playlist";
@@ -160,7 +161,12 @@ const SongCard = ({ track }) => {
                         dispatch(createNewPlaylist(name));
                     }}
                 />
-                <div className="sm-btn add-to-fav-button">
+                <div
+                    className="sm-btn add-to-fav-button"
+                    onClick={() => {
+                        dispatch(addSongToFavorite(track));
+                    }}
+                >
                     <div className="circle">
                         <FontAwesomeIcon icon={faHeart} />
                     </div>

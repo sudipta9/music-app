@@ -13,21 +13,6 @@ export const setRecommendations = (recommendations) => {
     localforage.setItem("recommendations", recommendations);
 };
 
-// playlists = {
-//     playlists: [
-//         {
-//             name: "Playlist 1",
-//             songs: [
-//                 {
-//                     id: 1,
-//                     name: "Song 1",
-//                     artist: "Artist 1",
-//                 }
-//             ]
-//         }
-//     ]
-// }
-
 export const getPlaylist = async () => {
     const playlist = await localforage.getItem("playlists");
     return playlist;
@@ -69,6 +54,16 @@ export const addSong = async (playlist, song) => {
     const playlists = await getPlaylist();
     const index = playlists.playlists.findIndex(
         (item) => item.name === playlist
+    );
+    playlists.playlists[index].songs.push(song);
+    localforage.setItem("playlists", playlists);
+    return playlists;
+};
+
+export const addToFavorites = async (song) => {
+    const playlists = await getPlaylist();
+    const index = playlists.playlists.findIndex(
+        (item) => item.name === "favorites"
     );
     playlists.playlists[index].songs.push(song);
     localforage.setItem("playlists", playlists);
