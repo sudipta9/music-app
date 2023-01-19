@@ -14,6 +14,8 @@ The features include:
 
 # Demo
 
+Visit [live demo](https://music-player-sudipta9.netlify.app/)
+
 ## home
 
 ![Home](demo/home.png)
